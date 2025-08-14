@@ -1,0 +1,25 @@
+---
+- name: Webserver setup
+  hosts: webservers
+  become: yes
+  tasks: 
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install apache2
+      ansible.builtin.apt:
+        name: apache2
+        state: present
+
+    - name: start apache2 service
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: yes
+        
+    - name: Copy index file
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+        backup: yes

@@ -1,0 +1,10 @@
+- name: print facts
+  hosts: all
+  tasks: 
+    - name: print os name
+      debug:
+        var: ansible_distribution
+
+    - name: print sys architecture
+      debug:
+        var: ansible_architecture

@@ -1,0 +1,22 @@
+- name: Provisioning servers
+  hosts: all
+  become: yes
+  tasks: 
+    - name: Install  ntp agent on ubuntu
+      apt:
+        name: "{{item}}"
+        state: present 
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+      loop: 
+        - ntp
+        - zip
+        - git
+        - wget
+
+    - name: start service ntp agent on ubuntu
+      service:
+        name: ntp
+        state: started
+        enabled: yes
+      when: ansible_distribution == "Ubuntu"

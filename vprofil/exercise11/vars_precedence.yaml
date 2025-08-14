@@ -1,0 +1,12 @@
+- name: Understanding vars
+  hosts: '*'
+  become: yes
+  gather_facts: False
+  vars:
+    USRNM: playuser
+    COMM: variable from playbook
+  tasks: 
+    - name: creat user
+      ansible.builtin.user:
+        name: "{{USRNM}}"
+        comment: "{{COMM}}" 

@@ -1,0 +1,41 @@
+- name: Provisioning servers
+  hosts: all
+  become: yes
+  tasks: 
+    - name: Install  ntp agent on ubuntu
+      apt:
+        name: "{{item}}"
+        state: present 
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+      loop: 
+        - ntp
+        - zip
+        - git
+        - wget
+
+    - name: start service ntp agent on ubuntu
+      service:
+        name: ntp
+        state: started
+        enabled: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Banner file
+      copy:
+        content: '# This server is managed by ansible'
+        dest: /etc/mine.conf
+
+    - name: Deploy ntp agent conf on ubuntu
+      template: 
+        src: templates/ntpconf_ubuntu
+        dest: /etc/chrony.conf
+        backup: yes
+      when: ansible_distribution == "Ubuntu" 
+
+    - name: restart service ntp agent on ubuntu
+      service:
+        name: ntp
+        state: restarted
+        enabled: yes
+      when: ansible_distribution == "Ubuntu"
